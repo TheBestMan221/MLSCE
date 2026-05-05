@@ -1,0 +1,2 @@
+Trained model .pkl files are saved here by train_models.py
+Run: python src/train_models.py

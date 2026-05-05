@@ -1,0 +1,110 @@
+{
+  "Logistic Regression": {
+    "type": "classification",
+    "accuracy": 0.7497,
+    "precision": 0.7532,
+    "recall": 0.7238,
+    "f1": 0.7382,
+    "confusion_matrix": [
+      [
+        793,
+        231
+      ],
+      [
+        269,
+        705
+      ]
+    ]
+  },
+  "Decision Tree": {
+    "type": "classification",
+    "accuracy": 0.7452,
+    "precision": 0.7445,
+    "recall": 0.7269,
+    "f1": 0.7356,
+    "confusion_matrix": [
+      [
+        781,
+        243
+      ],
+      [
+        266,
+        708
+      ]
+    ]
+  },
+  "Random Forest": {
+    "type": "classification",
+    "accuracy": 0.7523,
+    "precision": 0.7487,
+    "recall": 0.7402,
+    "f1": 0.7445,
+    "confusion_matrix": [
+      [
+        782,
+        242
+      ],
+      [
+        253,
+        721
+      ]
+    ]
+  },
+  "SVM": {
+    "type": "classification",
+    "accuracy": 0.7618,
+    "precision": 0.7505,
+    "recall": 0.7659,
+    "f1": 0.7581,
+    "confusion_matrix": [
+      [
+        776,
+        248
+      ],
+      [
+        228,
+        746
+      ]
+    ]
+  },
+  "Naive Bayes": {
+    "type": "classification",
+    "accuracy": 0.7482,
+    "precision": 0.7767,
+    "recall": 0.6786,
+    "f1": 0.7244,
+    "confusion_matrix": [
+      [
+        834,
+        190
+      ],
+      [
+        313,
+        661
+      ]
+    ]
+  },
+  "Linear Regression": {
+    "type": "regression",
+    "mae": 3.785,
+    "mse": 23.0591,
+    "r2": 0.3891
+  },
+  "Ridge Regression": {
+    "type": "regression",
+    "mae": 3.7851,
+    "mse": 23.0591,
+    "r2": 0.3891
+  },
+  "Lasso Regression": {
+    "type": "regression",
+    "mae": 3.8098,
+    "mse": 23.1401,
+    "r2": 0.3869
+  },
+  "K-Means": {
+    "type": "clustering",
+    "k": 5,
+    "inertia": 53404.0
+  }
+}

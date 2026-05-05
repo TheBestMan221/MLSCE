@@ -1,0 +1,152 @@
+name: F1 ML Project CI
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  # ─────────────────────────────────────────────────────────
+  # JOB 1: Install, syntax check, unit tests
+  # ─────────────────────────────────────────────────────────
+  test:
+    name: Install & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install scikit-learn numpy pandas joblib streamlit plotly \
+                      dvc pyyaml pytest matplotlib seaborn
+
+      - name: Check all required source files exist
+        run: |
+          python -c "
+          import os, sys
+          required = [
+              'app.py', 'params.yaml', 'dvc.yaml',
+              'src/data_loader.py', 'src/preprocessing.py',
+              'src/feature_engineering.py', 'src/train_models.py',
+              'src/predictor.py', 'src/simulator.py', 'src/strategy.py',
+              'ml_pipeline/data_ingestion.py', 'ml_pipeline/preprocessing.py',
+              'ml_pipeline/feature_engineering.py', 'ml_pipeline/train.py',
+              'ml_pipeline/evaluate.py',
+              'mlops/model_registry/register_model.py',
+              'Dockerfile', 'docker-compose.yml',
+          ]
+          missing = [f for f in required if not os.path.exists(f)]
+          if missing:
+              print('MISSING:'); [print(f'  - {m}') for m in missing]; sys.exit(1)
+          print(f'All {len(required)} required files present.')
+          "
+
+      - name: Syntax check all Python modules
+        run: |
+          python -m py_compile src/data_loader.py
+          python -m py_compile src/preprocessing.py
+          python -m py_compile src/feature_engineering.py
+          python -m py_compile src/predictor.py
+          python -m py_compile src/simulator.py
+          python -m py_compile src/strategy.py
+          python -m py_compile src/train_models.py
+          python -m py_compile ml_pipeline/data_ingestion.py
+          python -m py_compile ml_pipeline/preprocessing.py
+          python -m py_compile ml_pipeline/feature_engineering.py
+          python -m py_compile ml_pipeline/train.py
+          python -m py_compile ml_pipeline/evaluate.py
+          python -m py_compile mlops/model_registry/register_model.py
+          echo "All modules compile cleanly."
+
+      - name: Validate params.yaml
+        run: |
+          python -c "
+          import yaml
+          with open('params.yaml') as f:
+              p = yaml.safe_load(f)
+          for key in ['base', 'classification', 'regression', 'clustering']:
+              assert key in p, f'Missing key in params.yaml: {key}'
+          assert 'year_cutoff'   in p['base']
+          assert 'test_size'     in p['base']
+          assert 'random_state'  in p['base']
+          print('params.yaml valid.')
+          "
+
+      - name: Validate dvc.yaml — all 5 stages present, no duplicate outputs
+        run: |
+          python -c "
+          import yaml
+          with open('dvc.yaml') as f:
+              d = yaml.safe_load(f)
+          stages = d.get('stages', {})
+          expected = ['data_ingestion','preprocessing','feature_engineering','train','evaluate']
+          for s in expected:
+              assert s in stages, f'Missing DVC stage: {s}'
+
+          # Check no output appears in more than one stage
+          all_outs = []
+          for sname, sdef in stages.items():
+              for out in sdef.get('outs', []):
+                  key = out if isinstance(out, str) else list(out.keys())[0]
+                  assert key not in all_outs, f'Duplicate DVC output: {key} in stage {sname}'
+                  all_outs.append(key)
+          print(f'dvc.yaml valid — {len(stages)} stages, no duplicate outputs.')
+          "
+
+      - name: Run simulator unit tests (no CSV / model files needed)
+        run: |
+          pytest tests/test_prediction.py::test_simulator_basic \
+                 tests/test_prediction.py::test_simulator_probabilities_valid \
+                 tests/test_prediction.py::test_simulator_positions_unique \
+                 tests/test_prediction.py::test_strategy_returns_dict \
+                 tests/test_prediction.py::test_strategy_valid_pit_count \
+                 tests/test_prediction.py::test_strategy_tyre_string_not_empty \
+                 tests/test_prediction.py::test_strategy_pit_windows_list \
+                 -v --tb=short
+
+      - name: Validate model registry module
+        run: |
+          python -c "
+          import sys; sys.path.insert(0,'.')
+          from mlops.model_registry.register_model import _load, list_models
+          entries = _load()
+          assert isinstance(entries, list), 'Registry must return a list'
+          print(f'Registry OK — {len(entries)} entries.')
+          "
+
+  # ─────────────────────────────────────────────────────────
+  # JOB 2: Docker file existence check (no actual build needed)
+  # ─────────────────────────────────────────────────────────
+  docker-check:
+    name: Docker Files Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Dockerfile exists and is non-empty
+        run: |
+          test -s Dockerfile && echo "Dockerfile OK" || (echo "Dockerfile missing or empty" && exit 1)
+
+      - name: Check docker-compose.yml exists
+        run: |
+          test -s docker-compose.yml && echo "docker-compose.yml OK" || (echo "Missing" && exit 1)
+
+      - name: Check .dockerignore exists
+        run: |
+          test -f .dockerignore && echo ".dockerignore OK" || echo ".dockerignore not found (warning only)"

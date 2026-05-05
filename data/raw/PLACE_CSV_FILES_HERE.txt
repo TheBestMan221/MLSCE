@@ -1,0 +1,9 @@
+Place the 8 Kaggle CSV files here:
+- results.csv
+- races.csv
+- drivers.csv
+- constructors.csv
+- qualifying.csv
+- pit_stops.csv
+- lap_times.csv
+- circuits.csv

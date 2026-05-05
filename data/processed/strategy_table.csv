@@ -1,0 +1,39 @@
+circuitRef,avg_pit_count,avg_lap_ms,circuit_name,country
+albert_park,0.85,99946.0,Albert Park Grand Prix Circuit,Australia
+americas,1.6,107767.0,Circuit of the Americas,USA
+bahrain,1.56,102653.0,Bahrain International Circuit,Bahrain
+baku,1.81,122252.0,Baku City Circuit,Azerbaijan
+buddh,1.7,94523.0,Buddh International Circuit,India
+catalunya,1.27,88848.0,Circuit de Barcelona-Catalunya,Spain
+fuji,0.0,97940.0,Fuji Speedway,Japan
+hockenheimring,0.98,88964.0,Hockenheimring,Germany
+hungaroring,1.26,90036.0,Hungaroring,Hungary
+imola,0.59,90498.0,Autodromo Enzo e Dino Ferrari,Italy
+indianapolis,0.0,80190.0,Indianapolis Motor Speedway,USA
+interlagos,1.39,86730.0,Autódromo José Carlos Pace,Brazil
+istanbul,0.72,95547.0,Istanbul Park,Turkey
+jeddah,1.38,114491.0,Jeddah Corniche Circuit,Saudi Arabia
+losail,2.39,94068.0,Losail International Circuit,Qatar
+magny_cours,0.0,80791.0,Circuit de Nevers Magny-Cours,France
+marina_bay,1.72,117892.0,Marina Bay Street Circuit,Singapore
+miami,1.22,96357.0,Miami International Autodrome,USA
+monaco,1.36,88298.0,Circuit de Monaco,Monaco
+monza,0.74,92632.0,Autodromo Nazionale di Monza,Italy
+mugello,3.3,139916.0,Autodromo Internazionale del Mugello,Italy
+nurburgring,0.55,100304.0,Nürburgring,Germany
+portimao,2.12,85590.0,Autódromo Internacional do Algarve,Portugal
+red_bull_ring,1.31,76096.0,Red Bull Ring,Austria
+ricard,1.13,101367.0,Circuit Paul Ricard,France
+rodriguez,1.38,87581.0,Autódromo Hermanos Rodríguez,Mexico
+sepang,0.97,110207.0,Sepang International Circuit,Malaysia
+shanghai,1.4,108261.0,Shanghai International Circuit,China
+silverstone,1.02,105429.0,Silverstone Circuit,UK
+sochi,1.2,106816.0,Sochi Autodrom,Russia
+spa,1.02,124270.0,Circuit de Spa-Francorchamps,Belgium
+suzuka,1.2,108204.0,Suzuka Circuit,Japan
+valencia,1.03,106300.0,Valencia Street Circuit,Spain
+vegas,1.74,104331.0,Las Vegas Strip Street Circuit,United States
+villeneuve,0.89,90303.0,Circuit Gilles Villeneuve,Canada
+yas_marina,1.33,105213.0,Yas Marina Circuit,UAE
+yeongam,1.49,135609.0,Korean International Circuit,Korea
+zandvoort,2.87,87587.0,Circuit Park Zandvoort,Netherlands

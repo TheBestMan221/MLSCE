@@ -1,0 +1,43 @@
+# Git
+.git
+.gitignore
+
+# DVC cache (can be large)
+.dvc
+.dvcignore
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Raw data (large CSVs — not needed in image, only processed data is copied)
+data/raw/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Test output
+htmlcov/
+.coverage
+
+# Docs (not needed at runtime)
+docs/
+screenshots/

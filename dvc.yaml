@@ -1,0 +1,88 @@
+# ─────────────────────────────────────────────────────────
+# dvc.yaml  –  Full ML pipeline definition
+# Run all stages:  dvc repro
+# Run one stage:   dvc repro train
+# ─────────────────────────────────────────────────────────
+
+stages:
+
+  data_ingestion:
+    cmd: python ml_pipeline/data_ingestion.py
+    deps:
+      - ml_pipeline/data_ingestion.py
+      - data/raw/results.csv
+      - data/raw/races.csv
+      - data/raw/drivers.csv
+      - data/raw/constructors.csv
+      - data/raw/qualifying.csv
+      - data/raw/pit_stops.csv
+      - data/raw/lap_times.csv
+      - data/raw/circuits.csv
+    outs:
+      - data/processed/ingested_master.csv
+    params:
+      - params.yaml:
+          - base.year_cutoff
+
+  preprocessing:
+    cmd: python ml_pipeline/preprocessing.py
+    deps:
+      - ml_pipeline/preprocessing.py
+      - data/processed/ingested_master.csv
+      - src/preprocessing.py
+    outs:
+      - data/processed/master.csv
+    params:
+      - params.yaml:
+          - base.random_state
+
+  feature_engineering:
+    cmd: python ml_pipeline/feature_engineering.py
+    deps:
+      - ml_pipeline/feature_engineering.py
+      - data/processed/master.csv
+      - src/feature_engineering.py
+    outs:
+      - data/processed/featured_master.csv
+
+  train:
+    cmd: python ml_pipeline/train.py
+    deps:
+      - ml_pipeline/train.py
+      - data/processed/featured_master.csv
+      - src/preprocessing.py
+    outs:
+      - models/Random_Forest.pkl
+      - models/Logistic_Regression.pkl
+      - models/Decision_Tree.pkl
+      - models/SVM.pkl
+      - models/Naive_Bayes.pkl
+      - models/Linear_Regression.pkl
+      - models/Ridge_Regression.pkl
+      - models/Lasso_Regression.pkl
+      - models/KMeans.pkl
+      - models/scaler.pkl
+      - models/le_driverRef.pkl
+      - models/le_constructorRef.pkl
+      - models/le_circuitRef.pkl
+      - models/meta.json
+    params:
+      - params.yaml:
+          - base.random_state
+          - base.test_size
+          - classification
+          - regression
+          - clustering
+
+  evaluate:
+    cmd: python ml_pipeline/evaluate.py
+    deps:
+      - ml_pipeline/evaluate.py
+      - models/Random_Forest.pkl
+      - models/Ridge_Regression.pkl
+      - data/processed/featured_master.csv
+    outs:
+      - models/feature_importance.json
+    metrics:
+      - models/metrics.json:
+          cache: false
